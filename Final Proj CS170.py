@@ -9,9 +9,19 @@ def cs170demo():
     for i in range(len(data)):
         object_to_classify = data[i, 1:]
         label_object_to_classify = data[i,0]
+        nearest_neighbor_distance = float('inf')
+        nearest_neighbor_location = float('inf')
 
-        print(f"Looping over i, at the {i+1} location")
-        print(f"The {i+1}th object is in class {label_object_to_classify}")
+        for k in range(len(data)):
+            if k != i:
+                distance = np.sqrt(np.sum((object_to_classify - data[k, 1:]) ** 2))
+
+                if distance < nearest_neighbor_distance:
+                    nearest_neighbor_distance = distance
+                    nearest_neighbor_location = k
+                    nearest_neighbor_label = data[nearest_neighbor_location, 0]
+        print(f"Object {i} is class {label_object_to_classify}")
+        print(f"Its nearest_neighbor is {nearest_neighbor_location} which is in class {nearest_neighbor_label}")
 
 def feature_search_demo(data):
     current_set_of_features = []
