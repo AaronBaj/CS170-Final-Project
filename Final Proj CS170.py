@@ -2,34 +2,33 @@ import numpy as np
 import time
 
 def leave_one_out_cross_validation(data, current_set, feature_to_add):
-    new_data = np.copy(data)
+    
+    features_to_use = list(current_set)
 
-    for i in range(len(new_data)):
-        for j in range(1, len(new_data[0])):
-            if j not in current_set and j != feature_to_add:
-                new_data[i, j] = 0
+    if feature_to_add is not None:
+        features_to_use.append(feature_to_add)
 
     number_correctly_classified = 0
-    for i in range(len(new_data)):
-        object_to_classify = new_data[i, 1:]
-        label_object_to_classify = new_data[i,0]
+    for i in range(len(data)):
+        object_to_classify = data[i, features_to_use]
+        label_object_to_classify = data[i,0]
 
         nearest_neighbor_distance = float('inf')
         nearest_neighbor_location = float('inf')
 
-        for k in range(len(new_data)):
+        for k in range(len(data)):
             if k != i:
-                distance = np.sqrt(np.sum((object_to_classify - new_data[k, 1:]) ** 2))
+                distance = np.sqrt(np.sum((object_to_classify - data[k, features_to_use]) ** 2))
 
                 if distance < nearest_neighbor_distance:
                     nearest_neighbor_distance = distance
                     nearest_neighbor_location = k
-                    nearest_neighbor_label = new_data[nearest_neighbor_location, 0]
+                    nearest_neighbor_label = data[nearest_neighbor_location, 0]
 
         if label_object_to_classify == nearest_neighbor_label:
             number_correctly_classified = number_correctly_classified + 1
 
-    return number_correctly_classified / len(new_data)
+    return number_correctly_classified / len(data)
     
 
 def feature_search_demo(data):
@@ -44,7 +43,7 @@ def feature_search_demo(data):
     print("Beginning Search:")
     best_set = []
     current_set_of_features = []
-    best_total_accuracy = 0
+
     for i in range(1, len(data[0])):
         print(f"\nOn level {i} of the search tree")
 
@@ -73,8 +72,8 @@ def feature_search_demo(data):
         if feature_to_add_at_this_level is not None:
             current_set_of_features.append(feature_to_add_at_this_level)
 
-            if best_so_far_accuracy > best_total_accuracy:
-                best_total_accuracy = best_so_far_accuracy
+            if best_so_far_accuracy > total_accuracy:
+                total_accuracy = best_so_far_accuracy
                 best_set = list(current_set_of_features) 
 
             features = []
@@ -94,7 +93,7 @@ def feature_search_demo(data):
 
     clean_format_new = "{" + ", ".join(features) + "}"
 
-    print(f"\nSearch finished, the best feature set is {clean_format_new}, with an accuracy of {best_total_accuracy * 100:.1f}%")
+    print(f"\nSearch finished, the best feature set is {clean_format_new}, with an accuracy of {total_accuracy * 100:.1f}%")
     print(f"Total runtime: {time_end - time_start:.1f} seconds")
         
 
@@ -127,15 +126,8 @@ def backward_elimination(data):
 
             accuracy = leave_one_out_cross_validation(data, tmp_features, None)
 
-            features = []
-
-            for feature in tmp_features:
-                features.append(str(feature))
-
-            features.append(str(k))
-
+            features = [str(feature) for feature in tmp_features]
             clean_format = "{" + ", ".join(features) + "}"
-
             print(f"Using feature(s) {clean_format} accuracy is {accuracy * 100:.1f}%")
 
             if accuracy > best_so_far_accuracy:
@@ -170,6 +162,7 @@ def backward_elimination(data):
     print(f"Total runtime: {time_end - time_start:.1f} seconds")
 
 
-data = np.loadtxt("CS170_Large_Data__40.txt")
+data = np.loadtxt("CS170_Small_Data__96.txt")
 
-backward_elimination(data)
+#backward_elimination(data)
+feature_search_demo(data)
