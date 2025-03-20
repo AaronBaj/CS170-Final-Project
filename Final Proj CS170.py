@@ -39,7 +39,7 @@ def feature_search_demo(data):
 
     total_accuracy = leave_one_out_cross_validation(data, list(range(1, len(data[0]) - 1)), None)
 
-    print(f"Running nearest neighbor with {len(data[0]) - 1} using leave one out, the resulting accuracy is: {total_accuracy * 100}%")
+    print(f"Running nearest neighbor with {len(data[0]) - 1} using leave one out, the resulting accuracy is: {total_accuracy * 100:.1f}%")
 
     print("Beginning Search:")
     best_set = []
@@ -98,6 +98,78 @@ def feature_search_demo(data):
     print(f"Total runtime: {time_end - time_start:.1f} seconds")
         
 
-data = np.loadtxt("CS170_Small_Data__96.txt")
+def backward_elimination(data):
+    time_start = time.time()
 
-feature_search_demo(data)
+    print(f"This dataset has {len(data[0]) - 1} features and {len(data)} instances")
+    current_set_of_features = list(range(1, len(data[0])))
+
+    total_accuracy = leave_one_out_cross_validation(data, current_set_of_features, None)
+
+    best_total_accuracy = total_accuracy
+
+    best_set = list(current_set_of_features)
+
+    print(f"Running nearest neighbor with {len(data[0]) - 1} using leave one out, the resulting accuracy is: {total_accuracy * 100:.1f}%")
+
+    print("Beginning Search:")
+    
+
+    for i in range(len(data[0]) - 2):
+        print(f"\nOn level {i + 1} of the search tree")
+
+        feature_to_remove_at_this_level = None
+        best_so_far_accuracy = 0
+
+        for k in current_set_of_features:
+            tmp_features = list(current_set_of_features)
+            tmp_features.remove(k)
+
+            accuracy = leave_one_out_cross_validation(data, tmp_features, None)
+
+            features = []
+
+            for feature in tmp_features:
+                features.append(str(feature))
+
+            features.append(str(k))
+
+            clean_format = "{" + ", ".join(features) + "}"
+
+            print(f"Using feature(s) {clean_format} accuracy is {accuracy * 100:.1f}%")
+
+            if accuracy > best_so_far_accuracy:
+                best_so_far_accuracy = accuracy
+                feature_to_remove_at_this_level = k
+
+        if feature_to_remove_at_this_level is not None:
+            current_set_of_features.remove(feature_to_remove_at_this_level)
+
+            if best_so_far_accuracy > best_total_accuracy:
+                best_total_accuracy = best_so_far_accuracy
+                best_set = list(current_set_of_features) 
+
+            features = []
+
+            for feature in current_set_of_features:
+                features.append(str(feature))
+
+            clean_format = "{" + ", ".join(features) + "}"
+
+            print(f"Feature set {clean_format} was best, accuracy is {best_so_far_accuracy * 100:.1f}%")
+    time_end = time.time()
+    
+    features = []
+
+    for feature in best_set:
+        features.append(str(feature))
+
+    clean_format_new = "{" + ", ".join(features) + "}"
+
+    print(f"\nSearch finished, the best feature set is {clean_format_new}, with an accuracy of {best_total_accuracy * 100:.1f}%")
+    print(f"Total runtime: {time_end - time_start:.1f} seconds")
+
+
+data = np.loadtxt("CS170_Large_Data__40.txt")
+
+backward_elimination(data)
