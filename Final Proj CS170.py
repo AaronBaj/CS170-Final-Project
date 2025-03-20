@@ -3,6 +3,16 @@ import numpy as np
 def leave_one_out_cross_validation(data, current_set, feature_to_add):
     return 1
 
+def cs170demo():
+    data = np.loadtxt("CS170_Small_Data__96.txt")
+    
+    for i in range(len(data)):
+        object_to_classify = data[i, 1:]
+        label_object_to_classify = data[i,0]
+
+        print(f"Looping over i, at the {i+1} location")
+        print(f"The {i+1}th object is in class {label_object_to_classify}")
+
 def feature_search_demo(data):
     current_set_of_features = []
 
@@ -23,4 +33,5 @@ def feature_search_demo(data):
 
 data = np.loadtxt("CS170_Small_Data__96.txt")
 
-feature_search_demo(data)
+#feature_search_demo(data)
+cs170demo()
