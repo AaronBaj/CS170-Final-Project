@@ -45,6 +45,9 @@ def feature_search_demo(data):
                     best_so_far_accuracy = accuracy
                     feature_to_add_at_this_level = k
 
+        if feature_to_add_at_this_level is not None:
+            current_set_of_features.append(feature_to_add_at_this_level)
+
         print(f"On level {i}, I added {feature_to_add_at_this_level} to the current set")
 
 data = np.loadtxt("CS170_Small_Data__96.txt")
