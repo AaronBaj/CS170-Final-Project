@@ -46,7 +46,7 @@ def feature_search_demo(data):
     current_set_of_features = []
     best_total_accuracy = 0
     for i in range(1, len(data[0])):
-        print(f"On the {i}th level of the search tree")
+        print(f"On level {i} of the search tree")
 
         feature_to_add_at_this_level = None
         best_so_far_accuracy = 0
@@ -84,7 +84,7 @@ def feature_search_demo(data):
 
             clean_format = "{" + ", ".join(features) + "}"
 
-            print(f"Feature set {clean_format} was best, accuracy is {best_so_far_accuracy:.2f}")
+            print(f"Feature set {clean_format} was best, accuracy is {best_so_far_accuracy:.2f} seconds")
     time_end = time.time()
     
     features = []
