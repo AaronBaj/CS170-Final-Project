@@ -39,14 +39,14 @@ def feature_search_demo(data):
 
     total_accuracy = leave_one_out_cross_validation(data, list(range(1, len(data[0]) - 1)), None)
 
-    print(f"Running nearest neighbor with {len(data[0]) - 1} using leave one out, the resulting accuracy is: {total_accuracy}")
+    print(f"Running nearest neighbor with {len(data[0]) - 1} using leave one out, the resulting accuracy is: {total_accuracy * 100}%")
 
     print("Beginning Search:")
     best_set = []
     current_set_of_features = []
     best_total_accuracy = 0
     for i in range(1, len(data[0])):
-        print(f"On level {i} of the search tree")
+        print(f"\nOn level {i} of the search tree")
 
         feature_to_add_at_this_level = None
         best_so_far_accuracy = 0
@@ -64,7 +64,7 @@ def feature_search_demo(data):
 
                 clean_format = "{" + ", ".join(features) + "}"
 
-                print(f"Using feature(s) {clean_format} accuracy is {accuracy:.2f}")
+                print(f"Using feature(s) {clean_format} accuracy is {accuracy * 100:.1f}%")
 
                 if accuracy > best_so_far_accuracy:
                     best_so_far_accuracy = accuracy
@@ -84,7 +84,7 @@ def feature_search_demo(data):
 
             clean_format = "{" + ", ".join(features) + "}"
 
-            print(f"Feature set {clean_format} was best, accuracy is {best_so_far_accuracy:.2f} seconds")
+            print(f"Feature set {clean_format} was best, accuracy is {best_so_far_accuracy * 100:.1f}%")
     time_end = time.time()
     
     features = []
@@ -94,8 +94,8 @@ def feature_search_demo(data):
 
     clean_format_new = "{" + ", ".join(features) + "}"
 
-    print(f"\nFinished search!! The best feature subset is {clean_format_new}, with an accuracy of {best_total_accuracy:.2f}.")
-    print(f"Total runtime: {time_end - time_start:.2f}")
+    print(f"\nSearch finished, the best feature set is {clean_format_new}, with an accuracy of {best_total_accuracy * 100:.1f}%")
+    print(f"Total runtime: {time_end - time_start:.1f} seconds")
         
 
 data = np.loadtxt("CS170_Small_Data__96.txt")
