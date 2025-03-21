@@ -36,7 +36,7 @@ def feature_search_demo(data):
 
     print(f"This dataset has {len(data[0]) - 1} features (not including the class feature) and {len(data)} instances")
 
-    total_accuracy = leave_one_out_cross_validation(data, list(range(1, len(data[0]) - 1)), None)
+    total_accuracy = leave_one_out_cross_validation(data, [list(range(1, len(data[0]) - 1))], None)
 
     print(f"Running nearest neighbor with {len(data[0]) - 1} features using leaveing-one-out, the resulting accuracy is: {total_accuracy * 100:.1f}%")
 
@@ -112,7 +112,7 @@ def backward_elimination(data):
     print("Beginning Search:")
     
 
-    for i in range(len(data[0]) - 2):
+    for i in range(len(data[0]) - 1):
         feature_to_remove_at_this_level = None
         best_so_far_accuracy = 0
 
